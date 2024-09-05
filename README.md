@@ -22,7 +22,7 @@
 
 ## Clone the Repository
 
-Use the command `git clone <repository-url>` to get the project files on your local machine.
+Use the command `git clone [<repository-url>](https://github.com/BryanSu-Backend/Calculator.git)` to get the project files on your local machine.
 
 ## Run
 
