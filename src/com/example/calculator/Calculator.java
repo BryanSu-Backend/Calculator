@@ -4,42 +4,45 @@ import java.util.Stack;
 
 public class Calculator {
 	
-	public String calculate(String input) throws Exception{
-		String[] comArray = input.split(" ");					
-		Stack<Double> values = new Stack<>(); // 
-		Operation op = null;
-		Double m = Double.parseDouble(comArray[0]);
-		values.push(m);
-		
-		for(int i = 1; i < comArray.length; i++) {
-			if(i%2==1) {				
-				if(comArray[i].equals(op.ADD.getOperationSymbol())) 			// ADD
-					values.push(Double.parseDouble(comArray[i+1]));
-				if(comArray[i].equals(op.SUBTRACT.getOperationSymbol())) 	// SUBTRACT
-					values.push(-Double.parseDouble(comArray[i+1]));
-				if(comArray[i].equals(op.MULTIPLY.getOperationSymbol())) { 	// MULTIPLY
-					double num = values.peek();
-					values.pop();
-					values.push(num * Double.parseDouble(comArray[i+1]));
-				}
-				if(comArray[i].equals("/")) { 								// DIVIDE
-					 double divisor = Double.parseDouble(comArray[i+1]);  
-					 if(divisor == 0)
-						 throw new Exception("Infinity");
-					 double dividend = values.peek(); 
-					 values.pop(); 
-					 values.push(dividend/divisor);  
-				}
-			}
-		}
-		
-		double sum = 0;
-		while(!values.isEmpty()) {		// Calculate sum from stack
-			sum += values.peek();
-			values.pop();
-		}
-		
-		String result = String.valueOf(sum);
-		return result;
+	private static boolean isNumber(String token) {
+        try {
+            Double.parseDouble(token);
+            return true;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+	
+	public static double calculate(Operation operation, double num1, double num2) throws Exception {
+        switch (operation) {
+            case ADD:
+                return num1 + num2;
+            case SUBTRACT:
+                return num1 - num2;
+            case MULTIPLY:
+                return num1 * num2;
+            case DIVIDE:
+                if (num2 != 0) {
+                    return num1 / num2;
+                } else {
+                    throw new Exception("Division can't be zero");
+                }
+            default:
+                throw new IllegalArgumentException("Invalid operation: " + operation);
+        }
+    }
+	
+	public double handleExpression(String input) throws Exception{
+		String[] comArray = input.split(" ");			
+        double result = Double.parseDouble(comArray[0]);
+        
+        for (int i = 1; i < comArray.length; i += 2) {
+            String operationSymbol = comArray[i];
+            double nextNumber = Double.parseDouble(comArray[i + 1]);
+            Operation operation = Operation.getOperation(operationSymbol);
+            result = calculate(operation, result, nextNumber);
+        }
+        
+        return result;
 	}
 }

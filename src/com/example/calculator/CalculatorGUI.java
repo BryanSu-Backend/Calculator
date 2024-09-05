@@ -15,6 +15,7 @@ public class CalculatorGUI extends JFrame implements ActionListener{
 	private JTextField textField;
 	private String input;
 	private Calculator cal = new Calculator();
+	private JButton[] buttons;
 	
 	public CalculatorGUI() {
 		// Set up GUI panel
@@ -32,11 +33,13 @@ public class CalculatorGUI extends JFrame implements ActionListener{
 		
 		// Set labels of buttons, and add them into the panel
 		String[] labels= {"7","8","9","+","4","5","6","-","1","2","3","*","0","C","=","/"};
+		buttons = new JButton[labels.length];
 		panel.setLayout(new GridLayout(4,4,1,1));
 		
 		for(int i=0;i<labels.length;i++) {
 			JButton button = new JButton(labels[i]);
 			button.addActionListener(this);
+			buttons[i] = button;
 			panel.add(button);
 		}
 		container.add(panel, BorderLayout.CENTER);
@@ -56,7 +59,7 @@ public class CalculatorGUI extends JFrame implements ActionListener{
 		} 
 		else if(actionCommand.equals("=")) {
 			try {
-				input+= "="+ cal.calculate(input);
+				input+= "="+ cal.handleExpression(input);
 			} catch (Exception ex) {
 				if(ex.getMessage().equals("Infinity"))
 					input+= "=" + ex.getMessage();
@@ -76,6 +79,12 @@ public class CalculatorGUI extends JFrame implements ActionListener{
 		}
 	}
 
+	public JTextField getTextField() {
+	    return textField;
+	}
+	public JButton[] getButtons() {
+        return buttons;
+    }
 	public static void main(String[] args) {
 		CalculatorGUI calGUI = new CalculatorGUI();
 		calGUI.setVisible(true);
